@@ -1,0 +1,60 @@
+[project]
+name = "trade"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "beautifulsoup4>=4.13.3",
+    "lxml>=5.3.1",
+    "pandas>=2.2.3",
+]
+
+[project.scripts]
+warmane-trade = "trade.actioneer_raw_csv_cli:main"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "ipython>=9.0.1",
+    "pre-commit>=4.1.0",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.9.9",
+    "taskipy>=1.14.1",
+]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+# (I)-> iSort, (F)->PyFlakes, (E,W)-> PyCodeStyle,(PL)->Pylint, (PT)->Pytest-style
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402"]
+"test_*.py" = ["E501"]
+"conftest.py" = ["E501"]
+
+[tool.ruff.format]
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+
+[tool.taskipy.tasks]
+lint = 'ruff check'
+pre_format = 'ruff check --fix'
+format = 'ruff format'
+run = 'python src/tree_view_cli/tree_view_cli.py .'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=src/tree_view_cli -vv'
+post_test = 'coverage html'
+
+[tool.uv]
+config-settings = { editable_mode = "compat" }
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
